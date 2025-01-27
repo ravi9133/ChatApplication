@@ -1,0 +1,49 @@
+package com.chatapp.servlets;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import com.chatapp.utils.RegisterDao;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+@WebServlet("/registerServlet")
+public class RegisterServlet extends HttpServlet {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+		PrintWriter out=response.getWriter();
+		request.getRequestDispatcher("header.html").include(request, response);
+		
+		String name=request.getParameter("name");
+		String password=request.getParameter("password");
+		String email=request.getParameter("email");
+		String gender=request.getParameter("gender");
+		String dob=request.getParameter("dob");
+		String addressLine=request.getParameter("addressLine");
+		String city=request.getParameter("city");
+		String state=request.getParameter("state");
+		String country=request.getParameter("country");
+		String contact=request.getParameter("contact");
+		
+		int status=RegisterDao.save(name, email, password, gender, dob, addressLine, city, state, country, contact);
+		if(status>0){
+			out.print("<p>You are successfully registered!</p>");
+			request.getRequestDispatcher("login.html").include(request, response);
+			
+		}
+		
+		request.getRequestDispatcher("footer.html").include(request, response);
+		out.close();
+	}
+
+}
